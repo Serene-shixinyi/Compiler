@@ -9,7 +9,7 @@ public class NewExprNode extends ExprNode{
     public String identifier;
     public int dimnum;
 
-    private List<ExprNode> exprlist = new ArrayList<ExprNode>();
+    public List<ExprNode> exprlist = new ArrayList<ExprNode>();
     public NewExprNode(position _pos, String _identifier, List<ExprNode> _exprlist, int _dimnum) {
         super(_pos);
         identifier = _identifier;

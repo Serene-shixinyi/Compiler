@@ -61,6 +61,14 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit(NewExprNode node) {
         node.type = new Type(node.identifier, node.dimnum);
+        int num = node.exprlist.size();
+        node.exprlist.forEach(x->x.accept(this));
+        for (int i = 0; i < num; ++i) {
+            if(!node.exprlist.get(i).type.is_int()) {
+                throw new semanticError("New array index must be int type",
+                        node.exprlist.get(i).pos);
+            }
+        }
         node.category = ExprNode.Category.RVALUE;
     }
 
@@ -151,7 +159,7 @@ public class SemanticChecker implements ASTVisitor {
         node.expr.accept(this);
         if(!node.expr.type.is_int())
             throw new semanticError("Operand error in unary operation", node.pos);
-        node.type = new Type("bool", 0);
+        node.type = new Type("int", 0);
         node.category = ExprNode.Category.RVALUE;
     }
     @Override
@@ -159,7 +167,7 @@ public class SemanticChecker implements ASTVisitor {
         node.expr.accept(this);
         if(!node.expr.type.is_int())
             throw new semanticError("Operand error in unary operation", node.pos);
-        node.type = new Type("bool", 0);
+        node.type = new Type("int", 0);
         node.category = ExprNode.Category.RVALUE;
     }
     @Override
@@ -263,7 +271,11 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(BlockStNode node) {
         LocalScope tmp = curscope;
         curscope = new LocalScope(tmp);
-        node.stmtlist.forEach(x -> x.accept(this));
+        int num = node.stmtlist.size();
+        for(int i = 0; i < num; ++i) {
+            if(node.stmtlist.get(i) != null)
+                node.stmtlist.get(i).accept(this);
+        }
         curscope = tmp;
     }
 

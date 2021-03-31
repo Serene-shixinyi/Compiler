@@ -76,6 +76,16 @@ public interface MxListener extends ParseTreeListener {
 	 */
 	void exitNullcst(MxParser.NullcstContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MxParser#bracket}.
+	 * @param ctx the parse tree
+	 */
+	void enterBracket(MxParser.BracketContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxParser#bracket}.
+	 * @param ctx the parse tree
+	 */
+	void exitBracket(MxParser.BracketContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MxParser#numbracket}.
 	 * @param ctx the parse tree
 	 */

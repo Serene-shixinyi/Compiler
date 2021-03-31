@@ -38,6 +38,8 @@ public class ASTBuilder extends MxBaseVisitor<ASTNode> {
         return new NullConstNode(new position(ctx.getStart()));
     }
     @Override
+    public ASTNode visitBracket(MxParser.BracketContext ctx) { return null; }
+    @Override
     public ExprNode visitNumbracket(MxParser.NumbracketContext ctx) {
         return (ExprNode) visit(ctx.expression());
     }
@@ -80,12 +82,12 @@ public class ASTBuilder extends MxBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitNewArrayType(MxParser.NewArrayTypeContext ctx) {
         List<ExprNode> exprlist = new ArrayList<>();
-        int num = ctx.numbracket().size(), i = 0;
-        for(; i < num; ++i) {
+        int num = ctx.numbracket().size();
+        for(int i = 0; i < num; ++i) {
             exprlist.add((ExprNode) visit(ctx.numbracket(i))); //numbracket:return expression
         }
         return new NewExprNode(new position(ctx.getStart()), ctx.simpletype().getText(),
-                            exprlist, num + ctx.Bracket().size());
+                            exprlist, num + ctx.bracket().size());
     }
     @Override
     public ASTNode visitNewClassType(MxParser.NewClassTypeContext ctx) {

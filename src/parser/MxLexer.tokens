@@ -52,7 +52,6 @@ Blankchar=51
 NotationLine=52
 Stringconst=53
 Identifier=54
-Bracket=55
 '['=1
 ']'=2
 '('=3

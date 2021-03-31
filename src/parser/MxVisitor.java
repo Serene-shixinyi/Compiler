@@ -51,6 +51,12 @@ public interface MxVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNullcst(MxParser.NullcstContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MxParser#bracket}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBracket(MxParser.BracketContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MxParser#numbracket}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

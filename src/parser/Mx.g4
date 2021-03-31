@@ -33,7 +33,7 @@ constant
     | Null          #nullcst
     ;
 
-Bracket: '[' ']';
+bracket: '[' ']';
 numbracket: '[' expression ']'; //
 simpletype
     : Int           #intType
@@ -44,7 +44,7 @@ simpletype
 
 type
     : simpletype    #narraytype
-    | type Bracket  #arraytype
+    | type bracket  #arraytype
     ;
 functype
     : type  #nfunctype
@@ -54,8 +54,8 @@ functype
 expressionlist : '(' (expression (',' expression)*)? ')';
 
 newthings
-    : New simpletype numbracket+ Bracket+ numbracket+   #newError
-    | New simpletype numbracket+ Bracket*               #newArrayType
+    : New simpletype numbracket+ bracket+ numbracket+   #newError
+    | New simpletype numbracket+ bracket*               #newArrayType
     | New simpletype '(' ')'                            #newClassType
     | New simpletype                                    #newSimpleType //maybe classtype
     ;
