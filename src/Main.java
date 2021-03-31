@@ -14,10 +14,11 @@ import java.io.InputStream;
 public class Main {
     public static void main(String[] args) throws Exception{
 
-        String name = "C:\\Users\\Serene\\IdeaProjects\\1\\src\\test.mx";
-        InputStream input = new FileInputStream(name);
+//         String name = "C:\\Users\\Serene\\IdeaProjects\\1\\src\\test.mx";
+//         InputStream input = new FileInputStream(name);
+          InputStream input = System.in;
 
-//        try {
+       try {
             ProgramNode ASTRoot;
 
             MxLexer lexer = new MxLexer(CharStreams.fromStream(input));
@@ -30,9 +31,9 @@ public class Main {
             ASTBuilder astBuilder = new ASTBuilder();
             ASTRoot = (ProgramNode)astBuilder.visit(parseTreeRoot);
             new SemanticChecker().visit(ASTRoot);
-//        } catch (error er) {
-//            System.err.println(er.toString());
-//            throw new RuntimeException();
-//        }
+       } catch (error er) {
+           System.err.println(er.toString());
+           throw new RuntimeException();
+       }
     }
 }
