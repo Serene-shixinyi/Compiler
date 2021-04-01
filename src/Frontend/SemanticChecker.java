@@ -157,15 +157,15 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit(PrefixOpNode node) {
         node.expr.accept(this);
-        if(!node.expr.type.is_int())
+        if((!node.expr.type.is_int()) || (node.expr.category != ExprNode.Category.LVALUE))
             throw new semanticError("Operand error in unary operation", node.pos);
         node.type = new Type("int", 0);
-        node.category = ExprNode.Category.RVALUE;
+        node.category = ExprNode.Category.LVALUE;
     }
     @Override
     public void visit(SuffixOpNode node) {
         node.expr.accept(this);
-        if(!node.expr.type.is_int())
+        if((!node.expr.type.is_int()) || (node.expr.category != ExprNode.Category.LVALUE))
             throw new semanticError("Operand error in unary operation", node.pos);
         node.type = new Type("int", 0);
         node.category = ExprNode.Category.RVALUE;
@@ -317,7 +317,7 @@ public class SemanticChecker implements ASTVisitor {
             throw new semanticError("Return expression in void function", node.pos);
         if((!funcType.is_void()) && node.expr == null)
             throw new semanticError("Return without expression in nonvoid function", node.pos);
-        if((node.expr != null) && (!funcType.equal(node.expr.type)))
+        if((node.expr != null) && (!funcType.can_assign(node.expr.type)))
             throw new semanticError("Return expression type doesn't match function type", node.pos);
     }
 
@@ -335,14 +335,22 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(IfelseStNode node) {
-        LocalScope tmp = curscope;
-        curscope = new LocalScope(tmp);
         node.cond.accept(this);
         if(!node.cond.type.is_bool())
             throw new semanticError("Condition of \"if\" must be type bool", node.cond.pos);
-        node.stmt1.accept(this);
-        if(node.stmt2 != null) node.stmt2.accept(this);
-        curscope = tmp;
+        LocalScope tmp;
+        if(node.stmt1!= null) {
+            tmp = curscope;
+            curscope = new LocalScope(tmp);
+            node.stmt1.accept(this);
+            curscope = tmp;
+        }
+        if(node.stmt2 != null) {
+            tmp = curscope;
+            curscope = new LocalScope(tmp);
+            node.stmt2.accept(this);
+            curscope = tmp;
+        }
     }
 
     @Override
@@ -353,7 +361,7 @@ public class SemanticChecker implements ASTVisitor {
         node.cond.accept(this);
         if(!node.cond.type.is_bool())
             throw new semanticError("Condition of \"while\" must be type bool", node.cond.pos);
-        node.stmt.accept(this);
+        if(node.stmt != null) node.stmt.accept(this);
         --loopcnt;
         curscope = tmp;
     }
@@ -370,7 +378,7 @@ public class SemanticChecker implements ASTVisitor {
                 throw new semanticError("Condition of \"for\" must be type bool", node.cond.pos);
         }
         if(node.incr!= null) node.incr.accept(this);
-        node.stmt.accept(this);
+        if(node.stmt != null) node.stmt.accept(this);
         --loopcnt;
         curscope = tmp;
     }
