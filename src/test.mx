@@ -1,0 +1,19 @@
+
+int l = 0;
+int r = 100;
+
+int cal(int x, int y) {
+    if(y == 0) return x;
+    return cal(y, x % y);
+}
+
+int main()
+{
+    while(l < r - 1) {
+        int mid = (l + r) >> 1;
+        printInt(mid);
+        if(cal(l, r) == 1) r = mid;
+        else l = mid;
+    }
+    return 0;
+}
